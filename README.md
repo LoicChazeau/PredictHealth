@@ -1,5 +1,52 @@
-# Vue 3 + Vite
+# PredictHealth Front
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+PredictHealth est un tableau de bord interactif développé avec **Vue.js** et **Vite** pour l'hôpital Pitié-Salpêtrière.  
+Il permet de visualiser les flux hospitaliers et de prédire les besoins en ressources.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 🚀 Technologies Utilisées
+- **Vue.js 3** : Framework JavaScript pour le front-end.
+- **Vite** : Outil de build rapide et léger.
+- **Vue Router** : Navigation entre les pages.
+- **Vuetify** : UI Kit pour les composants stylés.
+
+## 📦 Installation et Lancement du Projet
+
+1. **Cloner le dépôt** :
+    ```bash
+    git clone https://github.com/LoicChazeau/PredictHealth
+    ```
+
+2. **Installer les dépendances** :
+    ```bash
+    npm install
+    ```
+
+3. **Lancer le serveur de développement** :
+    ```bash
+    npm run dev
+    ```
+
+Le projet sera accessible sur **http://localhost:5173**.
+
+## 📂 Structure du Projet
+
+index.html : Point d'entrée principal
+
+package.json : Dépendances et scripts
+
+src/ : Dossier principal des fichiers sources
+
+src/assets/ : Images et fichiers statiques
+
+src/components/ : Composants réutilisables
+
+src/views/ : Pages du tableau de bord
+
+src/router/ : Configuration du routing
+
+src/App.vue : Composant racine
+
+src/main.js : Initialisation de l'application
+
+
+
