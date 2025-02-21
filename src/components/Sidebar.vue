@@ -1,5 +1,8 @@
 <template>
     <aside class="sidebar">
+        <div class="logo">
+            <img src="../assets/logo.png" alt="PredictHealth" class="logo-img">
+        </div>
         <ul>
             <li>
                 <router-link to="/">
@@ -55,5 +58,14 @@
 
 .sidebar ul li a span {
     margin-right: 10px;
+}
+
+.logo {
+    margin-top: 0px;
+    margin-bottom: 70px;
+}
+
+.logo-img {
+    width: 90%;
 }
 </style>

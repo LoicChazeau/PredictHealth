@@ -18,7 +18,7 @@
     justify-content: end;
     align-items: center;
     background: #e2e1e9;
-    height: 60px;
+    height: 80px;
     padding-right: 40px;
 }
 
