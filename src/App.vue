@@ -1,42 +1,41 @@
 <template>
-  <div>
-    <nav>
-      <ul>
-        <li><router-link to="/">Accueil</router-link></li>
-        <li><router-link to="/admissions">Admissions</router-link></li>
-        <li><router-link to="/previsions">Prévisions</router-link></li>
-        <li><router-link to="/recommandations">Recommandations</router-link></li>
-      </ul>
-    </nav>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <Sidebar />
 
-    <router-view />
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Header -->
+      <Header />
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
+import Sidebar from './components/Sidebar.vue'
+import Header from './components/Header.vue'
 </script>
 
-<style>
-nav ul {
+<style scoped>
+.dashboard {
   display: flex;
-  gap: 20px;
-  list-style-type: none;
-  padding: 10px;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  padding: 20px;
   background: #f4f4f9;
-  border-bottom: 1px solid #ccc;
-}
-
-nav ul li {
-  display: inline;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: #007bff;
-  font-weight: bold;
-}
-
-nav ul li a:hover {
-  color: #0056b3;
+  flex: 1;
 }
 </style>
