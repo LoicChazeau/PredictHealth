@@ -17,7 +17,7 @@
     display: flex;
     justify-content: end;
     align-items: center;
-    background: #e2e1e9;
+    background: #F5F7FF;
     height: 80px;
     padding-right: 40px;
 }
