@@ -1,17 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 
+// Import des pages
+import Home from '../views/Home.vue'
+import Admissions from '../views/Admissions.vue'
+import Previsions from '../views/Previsions.vue'
+import Recommandations from '../views/Recommandations.vue'
+
+// Configuration des routes
 const routes = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
+  { path: '/', name: 'Home', component: Home },
+  { path: '/admissions', name: 'Admissions', component: Admissions },
+  { path: '/previsions', name: 'Previsions', component: Previsions },
+  { path: '/recommandations', name: 'Recommandations', component: Recommandations }
 ]
 
+// Création du router
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes
 })
 
 export default router
