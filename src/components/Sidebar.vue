@@ -3,28 +3,34 @@
         <div class="logo">
             <img src="../assets/logo.png" alt="PredictHealth" class="logo-img">
         </div>
-        <ul>
-            <li>
-                <router-link to="/">
-                    <span>🏠</span> Accueil
+        <div class="sidebar-container">
+            <div class="sidebar-content">
+                <router-link to="/" class="sidebar-btn">
+                    <img src="../assets/dashboard.svg" alt="Accueil">
+                    <span>Accueil</span>
                 </router-link>
-            </li>
-            <li>
-                <router-link to="/admissions">
-                    <span>📊</span> Admissions
+                <router-link to="/admissions" class="sidebar-btn">
+                    <img src="../assets/collections.svg" alt="Admissions">
+                    <span>Admissions</span>
                 </router-link>
-            </li>
-            <li>
-                <router-link to="/previsions">
-                    <span>📈</span> Prévisions
+                <router-link to="/previsions" class="sidebar-btn">
+                    <img src="../assets/insert_invitation.svg" alt="Prévisions">
+                    <span>Prévisions</span>
                 </router-link>
-            </li>
-            <li>
-                <router-link to="/recommandations">
-                    <span>💡</span> Recommandations
+                <router-link to="/recommandations" class="sidebar-btn">
+                    <img src="../assets/thumb_up.svg" alt="Recommandations">
+                    <span>Recommandations</span>
                 </router-link>
-            </li>
-        </ul>
+                <router-link to="/parametres" class="sidebar-btn">
+                    <img src="../assets/settings.svg" alt="Paramètres">
+                    <span>Paramètres</span>
+                </router-link>
+            </div>
+            <router-link to="/logout" class="sidebar-footer sidebar-btn">
+                <img src="../assets/power_settings_new.svg" alt="Déconnexion">
+                <span>Déconnexion</span>
+            </router-link>
+        </div>
     </aside>
 </template>
 
@@ -33,31 +39,40 @@
 
 <style scoped>
 .sidebar {
-    width: 240px;
+    height: 100vh;
     background: #fff;
     box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 110px);
 }
 
-.sidebar ul li {
-    margin: 20px 0;
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
 }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: #4f46e5;
-    font-weight: bold;
+.sidebar-btn {
     display: flex;
     align-items: center;
+    padding: 10px 20px;
+    margin-bottom: 35px;
+    color: #333B6A;
+    text-decoration: none;
 }
 
-.sidebar ul li a span {
+.sidebar-btn img {
+    width: 24px;
     margin-right: 10px;
+}
+
+.sidebar-footer {
+    color: #DC3545;
 }
 
 .logo {
