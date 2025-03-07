@@ -52,7 +52,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #1c2440;
-  margin-bottom: 10px;
+  margin-bottom: 36px;
 }
 
 .graph-container {
@@ -61,7 +61,8 @@
   align-items: flex-end;
   height: 140px;
   padding: 10px 0;
-  margin-top: 36px;
+  margin-top: 90px;
+  gap:60px
 }
 
 .column {
@@ -102,12 +103,12 @@
 }
 
 .reality-bar {
-  height: 85px; /* 85% */
+  height: 100px; /* 85% */
   background-color: #1c2440;
 }
 
 .prediction-bar {
-  height: 88px; /* 88% */
+  height: 150px; /* 88% */
   background-color: #b0b0b0;
 }
 
@@ -119,10 +120,10 @@
 }
 
 .legend {
-  margin-top: 46px;
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 70px;
 }
 
 .legend-item {
