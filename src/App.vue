@@ -31,6 +31,8 @@ import Header from './components/Header.vue'
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-top: 50px;
+  background: #333B6A;
 }
 
 .page-content {
