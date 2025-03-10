@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Recommandations</h1>
+        <h1>Paramètres</h1>
     </div>
 </template>
 
