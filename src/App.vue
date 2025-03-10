@@ -35,7 +35,7 @@ import Header from './components/Header.vue'
 
 .page-content {
   padding: 20px;
-  background: #F5F7FF;
+  background: #333B6A;
   flex: 1;
 }
 </style>
