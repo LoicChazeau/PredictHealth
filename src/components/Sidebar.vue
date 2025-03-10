@@ -39,6 +39,7 @@
 
 <style scoped>
 .sidebar {
+    width: 250px;
     height: 100vh;
     background: #fff;
     box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
