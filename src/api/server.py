@@ -4,7 +4,8 @@ import pandas as pd
 app = FastAPI()
 
 # Charger les données
-df = pd.read_csv("src/api/Global_dataset.csv")
+df = pd.read_csv("src/api/Global_dataset.csv", sep=";")
+df = df.fillna("Donnée manquante")
 
 # Endpoint pour récupérer toutes les données
 @app.get("/data")
