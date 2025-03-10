@@ -4,7 +4,7 @@ import pandas as pd
 app = FastAPI()
 
 # Charger les données
-df = pd.read_csv("Global_dataset.csv")
+df = pd.read_csv("src/api/Global_dataset.csv")
 
 # Endpoint pour récupérer toutes les données
 @app.get("/data")
