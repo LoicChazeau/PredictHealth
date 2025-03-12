@@ -16,8 +16,15 @@ app.add_middleware(
 df = pd.read_csv("Global_dataset.csv", sep=";")
 df = df.fillna("Donnée manquante")
 
-latest_data = df.iloc[-1]  # Aujourd’hui
-yesterday_data = df.iloc[-2]  # Hier
+
+# Convertir la colonne Date en datetime
+df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
+# Trouver la dernière année disponible dans le dataset
+last_year = int(df["Date"].dt.year.max())
+# Filtrer les données pour la dernière année disponible
+df_year = df[df["Date"].dt.year == last_year].copy()
+# Extraire les derniers jours du dataset
+df_recent = df.sort_values(by="Date", ascending=False).head(7)
 
 # Endpoint pour récupérer toutes les données
 @app.get("/data")
@@ -27,17 +34,19 @@ def get_data():
 # Endpoint pour récupérer les données du dashboard
 @app.get("/dashboard")
 def get_dashboard():
-    # 🔹 Admissions Totales
+    # Admissions Totales
+    latest_data = df.iloc[-1]  # Aujourd’hui
+    yesterday_data = df.iloc[-2]  # Hier
+
     admissions_jour = int(latest_data["Admissions_totales"])
     admissions_hier = int(yesterday_data["Admissions_totales"]) if not yesterday_data.empty else admissions_jour
 
-    # 🔹 Évolution Admissions (%)
     evolution_admissions = (
         round(((admissions_jour - admissions_hier) / admissions_hier) * 100, 2)
         if admissions_hier != 0 else 0
     )
 
-    # 🔹 Taux d’occupation des lits
+    # Taux d’occupation des lits
     taux_occupation = round(
         (latest_data["Lits_occupes"] / (latest_data["Lits_disponibles"] + latest_data["Lits_occupes"])) * 100, 2
     )
@@ -47,7 +56,14 @@ def get_dashboard():
 
     evolution_taux_occupation = round(taux_occupation - taux_occupation_hier, 2)
 
-    # 🔹 Temps d’attente moyen
+    # Prédiction du taux d'occupation des lits pour demain
+    df_recent["Taux_occupation"] = (
+        df_recent["Lits_occupes"] / (df_recent["Lits_disponibles"] + df_recent["Lits_occupes"])
+    ) * 100
+
+    prediction_taux_occupation = round(df_recent["Taux_occupation"].mean(), 2)  # Moyenne des 7 derniers jours
+
+    # Temps d’attente moyen
     temps_attente_jour = int(latest_data["Temp_d’attente_moyen_minutes"])
     temps_attente_hier = int(yesterday_data["Temp_d’attente_moyen_minutes"]) if not yesterday_data.empty else temps_attente_jour
 
@@ -61,8 +77,31 @@ def get_dashboard():
         "evolution_admissions": f"{evolution_admissions}%",
         "taux_occupation": f"{taux_occupation}%",
         "evolution_taux_occupation": f"{evolution_taux_occupation}%",
+        "prediction_taux_occupation": f"{prediction_taux_occupation}%",  # Valeur prédite
         "temps_attente_jour": f"{temps_attente_jour} min",
         "evolution_temps_attente": f"{evolution_temps_attente}%",
+    }
+
+# Endpoint pour récupérer l'évolution des admissions par mois
+@app.get("/evolution-admissions")
+def get_evolution_admissions():
+    # Vérifier et convertir Admissions_totales en nombres valides
+    df_year["Admissions_totales"] = pd.to_numeric(df_year["Admissions_totales"], errors="coerce").fillna(0)
+
+    # Groupement par mois
+    monthly_admissions = (
+        df_year.groupby(df_year["Date"].dt.month)["Admissions_totales"]
+        .sum()
+        .reset_index()
+    )
+
+    mois_list = monthly_admissions["Date"].astype(int).tolist()
+    admissions_list = monthly_admissions["Admissions_totales"].astype(float).astype(int).tolist()
+
+    return {
+        "mois": mois_list,
+        "admissions": admissions_list,
+        "annee": last_year,
     }
 
 

@@ -1,17 +1,33 @@
 <template>
   <v-card class="chart-card">
-    <h3 class="chart-title">Évolution des Admissions</h3>
+    <h3 class="chart-title">Évolution des admissions sur {{ year }}</h3>
     <div ref="chart" class="chart-container"></div>
   </v-card>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import axios from 'axios'
 import * as echarts from 'echarts'
 
 const chart = ref(null)
+const admissionsData = ref([])
+const monthsLabels = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+const year = ref(null)
 
-onMounted(() => {
+const fetchData = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/evolution-admissions')
+    admissionsData.value = response.data.admissions
+    year.value = response.data.annee
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données du graphique :', error)
+  }
+}
+
+onMounted(async () => {
+  await fetchData()
+
   const myChart = echarts.init(chart.value)
 
   const options = {
@@ -25,7 +41,7 @@ onMounted(() => {
     },
     xAxis: {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      data: monthsLabels.value,
       axisLine: { lineStyle: { color: '#ccc' } },
       axisTick: { show: false },
       axisLabel: { color: '#666', fontSize: 12 }
@@ -49,7 +65,7 @@ onMounted(() => {
         emphasis: {
           itemStyle: { color: '#ff6b6b' }
         },
-        data: [8000, 8500, 9000, 9500, 10000, 10500, 11000, 10800, 10700, 10900, 11100, 11500]
+        data: admissionsData.value
       }
     ]
   }
