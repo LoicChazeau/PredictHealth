@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
+import numpy as np
 
 app = FastAPI()
 
@@ -31,6 +32,17 @@ df_recent = df.sort_values(by="Date", ascending=False).head(7)
 def get_data():
     return df.to_dict(orient="records")
 
+# Simuler une prédiction avec une régression linéaire simple
+def predict_taux_occupation():
+    x = np.arange(len(df))  # Index des jours
+    y = df["Lits_occupes"] / (df["Lits_disponibles"] + df["Lits_occupes"]) * 100  # Taux d'occupation en %
+
+    # Modèle de régression linéaire
+    coef = np.polyfit(x, y, 1)
+    tendance = np.poly1d(coef)
+
+    return round(tendance(len(df) + 1), 2)  # Prédiction du jour suivant
+
 # Endpoint pour récupérer les données du dashboard
 @app.get("/dashboard")
 def get_dashboard():
@@ -45,23 +57,20 @@ def get_dashboard():
         round(((admissions_jour - admissions_hier) / admissions_hier) * 100, 2)
         if admissions_hier != 0 else 0
     )
+    evolution_admissions = round(evolution_admissions)
 
     # Taux d’occupation des lits
     taux_occupation = round(
-        (latest_data["Lits_occupes"] / (latest_data["Lits_disponibles"] + latest_data["Lits_occupes"])) * 100, 2
+        (latest_data["Lits_occupes"] / (latest_data["Lits_disponibles"] + latest_data["Lits_occupes"])) * 100
     )
     taux_occupation_hier = round(
-        (yesterday_data["Lits_occupes"] / (yesterday_data["Lits_disponibles"] + yesterday_data["Lits_occupes"])) * 100, 2
+        (yesterday_data["Lits_occupes"] / (yesterday_data["Lits_disponibles"] + yesterday_data["Lits_occupes"])) * 100
     ) if not yesterday_data.empty else taux_occupation
 
-    evolution_taux_occupation = round(taux_occupation - taux_occupation_hier, 2)
+    evolution_taux_occupation = taux_occupation - taux_occupation_hier
 
     # Prédiction du taux d'occupation des lits pour demain
-    df_recent["Taux_occupation"] = (
-        df_recent["Lits_occupes"] / (df_recent["Lits_disponibles"] + df_recent["Lits_occupes"])
-    ) * 100
-
-    prediction_taux_occupation = round(df_recent["Taux_occupation"].mean(), 2)  # Moyenne des 7 derniers jours
+    prediction_taux_occupation = round(predict_taux_occupation())
 
     # Temps d’attente moyen
     temps_attente_jour = int(latest_data["Temp_d’attente_moyen_minutes"])
@@ -71,6 +80,7 @@ def get_dashboard():
         round(((temps_attente_jour - temps_attente_hier) / temps_attente_hier) * 100, 2)
         if temps_attente_hier != 0 else 0
     )
+    evolution_temps_attente = round(evolution_temps_attente)
 
     return {
         "admissions_jour": admissions_jour,
@@ -119,3 +129,6 @@ def predict(date: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+
+

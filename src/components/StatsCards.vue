@@ -51,7 +51,7 @@
               {{ getTrendIcon(stats.evolution_taux_occupation) }}
             </v-icon>
             <span :class="getTrendClass(stats.evolution_taux_occupation)">
-              {{ Math.abs(parseFloat(stats.evolution_taux_occupation)) }}
+              {{ Math.abs(parseFloat(stats.evolution_taux_occupation)) }}%
             </span>
           </v-col>
         </v-row>
@@ -80,7 +80,7 @@
               {{ getTrendIcon(stats.evolution_temps_attente) }}
             </v-icon>
             <span :class="getTrendClass(stats.evolution_temps_attente)">
-              {{ Math.abs(parseFloat(stats.evolution_temps_attente)) }}
+              {{ Math.abs(parseFloat(stats.evolution_temps_attente)) }}%
             </span>
           </v-col>
         </v-row>
