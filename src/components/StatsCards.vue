@@ -9,8 +9,7 @@
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Admissions Totales</p>
-            <p class="card-subtitle">NB. total d'admissions</p>
+            <p class="card-title">Admissions totales</p>
           </v-col>
         </v-row>
         <v-row align="center">
@@ -23,7 +22,7 @@
               {{ getTrendIcon(stats.evolution_admissions) }}
             </v-icon>
             <span :class="getTrendClass(stats.evolution_admissions)">
-              {{ stats.evolution_admissions }}
+              {{ Math.abs(parseFloat(stats.evolution_admissions)) }}%
             </span>
           </v-col>
         </v-row>
@@ -39,8 +38,7 @@
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Occupation des Lits</p>
-            <p class="card-subtitle">Pourcentage</p>
+            <p class="card-title">Occupation des lits</p>
           </v-col>
         </v-row>
         <v-row align="center">
@@ -53,7 +51,7 @@
               {{ getTrendIcon(stats.evolution_taux_occupation) }}
             </v-icon>
             <span :class="getTrendClass(stats.evolution_taux_occupation)">
-              {{ stats.evolution_taux_occupation }}
+              {{ Math.abs(parseFloat(stats.evolution_taux_occupation)) }}
             </span>
           </v-col>
         </v-row>
@@ -69,21 +67,20 @@
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Temps d'Attente Moyen</p>
-            <p class="card-subtitle">Aujourd'hui</p>
+            <p class="card-title">Temps d'attente moyen</p>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="6">
             <h2 class="stat-value">{{ stats.temps_attente_jour }}</h2>
-            <p class="card-footer">Minutes</p>
+            <p class="card-footer">Actuellement</p>
           </v-col>
           <v-col cols="6" class="d-flex align-center justify-end">
             <v-icon :color="getTrendColor(stats.evolution_temps_attente)">
               {{ getTrendIcon(stats.evolution_temps_attente) }}
             </v-icon>
             <span :class="getTrendClass(stats.evolution_temps_attente)">
-              {{ stats.evolution_temps_attente }}
+              {{ Math.abs(parseFloat(stats.evolution_temps_attente)) }}
             </span>
           </v-col>
         </v-row>
@@ -183,5 +180,17 @@ const getTrendIcon = (value) => {
 
 .stat-change.negative {
   color: red;
+}
+
+.negative {
+  color: red;
+  font-weight: 600;
+  padding-left: 5px
+}
+
+.positive {
+  color: green;
+  font-weight: 600;
+  padding-left: 5px
 }
 </style>

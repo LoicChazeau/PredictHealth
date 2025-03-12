@@ -61,7 +61,7 @@ def get_dashboard():
         "evolution_admissions": f"{evolution_admissions}%",
         "taux_occupation": f"{taux_occupation}%",
         "evolution_taux_occupation": f"{evolution_taux_occupation}%",
-        "temps_attente_jour": f"{temps_attente_jour}",
+        "temps_attente_jour": f"{temps_attente_jour} min",
         "evolution_temps_attente": f"{evolution_temps_attente}%",
     }
 
