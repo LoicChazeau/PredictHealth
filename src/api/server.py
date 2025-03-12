@@ -1,8 +1,16 @@
 from fastapi import FastAPI
 import pandas as pd
-from datetime import datetime, timedelta
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Autorise uniquement le frontend
+    allow_credentials=True,
+    allow_methods=["*"],  # Autorise toutes les méthodes (GET, POST...)
+    allow_headers=["*"],  # Autorise tous les headers
+)
 
 # Charger les données
 df = pd.read_csv("Global_dataset.csv", sep=";")
@@ -53,7 +61,7 @@ def get_dashboard():
         "evolution_admissions": f"{evolution_admissions}%",
         "taux_occupation": f"{taux_occupation}%",
         "evolution_taux_occupation": f"{evolution_taux_occupation}%",
-        "temps_attente_jour": f"{temps_attente_jour} min",
+        "temps_attente_jour": f"{temps_attente_jour}",
         "evolution_temps_attente": f"{evolution_temps_attente}%",
     }
 
