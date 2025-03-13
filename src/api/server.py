@@ -3,6 +3,7 @@ import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import numpy as np
+import json
 
 app = FastAPI()
 
@@ -301,14 +302,11 @@ def get_filters():
     
     
 # Endpoint pour récupérer une prédiction basée sur l’algorithme
-@app.get("/predict/{date}")
-def predict(date: str):
-    # ICI, APPELER LA FONCTION D’ANALYSE PREDICTIVE DU NOTEBOOK
-    prediction = {
-        "date": date,
-        "prediction": 125
-    }
-    return prediction
+@app.get("/predictions")
+def get_predictions():
+    with open("predictions.json", "r") as f:
+         predictions = json.load(f)
+    return predictions
 
 # Lancer le serveur API
 if __name__ == "__main__":
