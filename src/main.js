@@ -9,7 +9,7 @@ import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faHospital, faClock, faUserInjured } from "@fortawesome/free-solid-svg-icons";
+import { faHospital, faClock, faUserInjured, faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 const vuetify = createVuetify({
     components,
@@ -19,7 +19,7 @@ const vuetify = createVuetify({
       },
 })
 
-library.add(faHospital, faClock, faUserInjured);
+library.add(faHospital, faClock, faUserInjured, faCalendar);
 
 const app = createApp(App)
 app.component("font-awesome-icon", FontAwesomeIcon);
