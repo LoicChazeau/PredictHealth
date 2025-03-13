@@ -82,8 +82,8 @@ watch(currentFilters, (newFilters) => {
 <style scoped>
 .admissions-container {
   padding: 20px;
-  min-height: 100vh;
-  overflow-y: auto;
+  min-height: 50vh;
+  overflow-y: hidden;
 }
 
 .filters {
