@@ -9,18 +9,21 @@
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Admissions Totales</p>
-            <p class="card-subtitle">NB. total d'admissions</p>
+            <p class="card-title">Admissions totales</p>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="6">
-            <h2 class="stat-value">110,000</h2>
-            <p class="card-footer">Cette année</p>
+            <h2 class="stat-value">{{ stats.admissions_jour }}</h2>
+            <p class="card-footer">Aujourd'hui</p>
           </v-col>
           <v-col cols="6" class="d-flex align-center justify-end">
-            <v-icon color="green">mdi-trending-up</v-icon>
-            <span class="stat-change positive">3.9%</span>
+            <v-icon :color="getTrendColor(stats.evolution_admissions)">
+              {{ getTrendIcon(stats.evolution_admissions) }}
+            </v-icon>
+            <span :class="getTrendClass(stats.evolution_admissions)">
+              {{ Math.abs(parseFloat(stats.evolution_admissions)) }}%
+            </span>
           </v-col>
         </v-row>
       </v-card>
@@ -35,18 +38,21 @@
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Occupation des Lits</p>
-            <p class="card-subtitle">Pourcentage</p>
+            <p class="card-title">Occupation des lits</p>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="6">
-            <h2 class="stat-value">85%</h2>
-            <p class="card-footer">sur 1800 lits</p>
+            <h2 class="stat-value">{{ stats.taux_occupation }}</h2>
+            <p class="card-footer">Actuellement</p>
           </v-col>
           <v-col cols="6" class="d-flex align-center justify-end">
-            <v-icon color="red">mdi-trending-down</v-icon>
-            <span class="stat-change negative">0.7%</span>
+            <v-icon :color="getTrendColor(stats.evolution_taux_occupation)">
+              {{ getTrendIcon(stats.evolution_taux_occupation) }}
+            </v-icon>
+            <span :class="getTrendClass(stats.evolution_taux_occupation)">
+              {{ Math.abs(parseFloat(stats.evolution_taux_occupation)) }}%
+            </span>
           </v-col>
         </v-row>
       </v-card>
@@ -57,28 +63,70 @@
         <v-row align="center">
           <v-col cols="2">
             <v-avatar size="34" color="grey-lighten-3">
-              <v-icon size="26" color="black">mdi-account-off</v-icon>
+              <v-icon size="26" color="black">mdi-clock-outline</v-icon>
             </v-avatar>
           </v-col>
           <v-col cols="10">
-            <p class="card-title">Déficit de personnel</p>
-            <p class="card-subtitle">par rapport aux besoins</p>
+            <p class="card-title">Temps d'attente moyen</p>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="6">
-            <h2 class="stat-value">12%</h2>
-            <p class="card-footer">Aujourd'hui</p>
+            <h2 class="stat-value">{{ stats.temps_attente_jour }}</h2>
+            <p class="card-footer">Actuellement</p>
           </v-col>
           <v-col cols="6" class="d-flex align-center justify-end">
-            <v-icon color="red">mdi-trending-down</v-icon>
-            <span class="stat-change negative">0.7%</span>
+            <v-icon :color="getTrendColor(stats.evolution_temps_attente)">
+              {{ getTrendIcon(stats.evolution_temps_attente) }}
+            </v-icon>
+            <span :class="getTrendClass(stats.evolution_temps_attente)">
+              {{ Math.abs(parseFloat(stats.evolution_temps_attente)) }}%
+            </span>
           </v-col>
         </v-row>
       </v-card>
     </v-col>
   </v-row>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+const stats = ref({
+  admissions_jour: "-",
+  evolution_admissions: "-",
+  taux_occupation: "-",
+  evolution_taux_occupation: "-",
+  temps_attente_jour: "-",
+  evolution_temps_attente: "-",
+});
+
+const fetchStats = async () => {
+  try {
+    const response = await axios.get("http://localhost:8000/dashboard");
+    stats.value = response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des stats :", error);
+  }
+};
+
+// Déclencher l'appel API au montage du composant
+onMounted(fetchStats);
+
+// Déterminer la classe et l'icône en fonction de l'évolution
+const getTrendClass = (value) => {
+  return parseFloat(value) > 0 ? "negative" : "positive";
+};
+
+const getTrendColor = (value) => {
+  return parseFloat(value) > 0 ? "red" : "green";
+};
+
+const getTrendIcon = (value) => {
+  return parseFloat(value) > 0 ? "mdi-trending-down" : "mdi-trending-up";
+};
+</script>
 
 <style scoped>
 .stats-container {
@@ -132,5 +180,17 @@
 
 .stat-change.negative {
   color: red;
+}
+
+.negative {
+  color: red;
+  font-weight: 600;
+  padding-left: 5px
+}
+
+.positive {
+  color: green;
+  font-weight: 600;
+  padding-left: 5px
 }
 </style>

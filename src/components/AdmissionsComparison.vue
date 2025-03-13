@@ -1,28 +1,27 @@
 <template>
   <v-card class="comparison-card">
-    <h3 class="title">Admissions</h3>
+    <h3 class="title">Taux d'occupation des lits</h3>
 
     <div class="graph-container">
       <!-- Réalité -->
       <div class="column">
         <div class="bubble reality">
-          <span>85%</span>
+          <span>{{ tauxOccupation }}%</span>
         </div>
-        <div class="bar reality-bar"></div>
-        <p class="label">Réalité</p>
+        <div class="bar reality-bar" :style="{ height: realityHeight + 'px' }"></div>
+        <p class="label">Aujourd'hui</p>
       </div>
 
       <!-- Prévisions -->
       <div class="column">
         <div class="bubble prediction">
-          <span>88%</span>
+          <span>{{ predictionTauxOccupation }}%</span>
         </div>
-        <div class="bar prediction-bar"></div>
-        <p class="label">Prévisions</p>
+        <div class="bar prediction-bar" :style="{ height: predictionHeight + 'px' }"></div>
+        <p class="label">Demain</p>
       </div>
     </div>
 
-    <!-- Légende -->
     <div class="legend">
       <div class="legend-item">
         <div class="legend-dot reality-dot"></div>
@@ -35,6 +34,34 @@
     </div>
   </v-card>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+const tauxOccupation = ref(0)
+const predictionTauxOccupation = ref(0)
+const realityHeight = ref(100)
+const predictionHeight = ref(120)
+
+const fetchData = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/dashboard')
+    const data = response.data
+
+    tauxOccupation.value = parseFloat(data.taux_occupation.replace('%', ''))
+    predictionTauxOccupation.value = parseFloat(data.prediction_taux_occupation.replace('%', ''))
+
+    realityHeight.value = tauxOccupation.value * 2
+    predictionHeight.value = predictionTauxOccupation.value * 2
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données :', error)
+  }
+}
+
+onMounted(fetchData)
+</script>
+
 
 <style scoped>
 .comparison-card {
@@ -62,7 +89,7 @@
   height: 140px;
   padding: 10px 0;
   margin-top: 90px;
-  gap:60px
+  gap: 60px;
 }
 
 .column {
@@ -103,12 +130,10 @@
 }
 
 .reality-bar {
-  height: 100px; /* 85% */
   background-color: #1c2440;
 }
 
 .prediction-bar {
-  height: 150px; /* 88% */
   background-color: #b0b0b0;
 }
 
