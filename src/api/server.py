@@ -308,6 +308,68 @@ def get_predictions():
          predictions = json.load(f)
     return predictions
 
+@app.get("/heatmap/admissions")
+def heatmap_admissions(year: Optional[int] = None):
+    df_filtered = df.copy()
+    if year:
+        df_filtered = df_filtered[df_filtered["Date"].dt.year == year]
+
+    np.random.seed(0)
+    df_filtered["Heure"] = np.random.choice(range(24), len(df_filtered))
+
+    bins = [0, 4, 8, 12, 16, 20, 24]
+    labels = ['0-4h', '4-8h', '8-12h', '12-16h', '16-20h', '20-24h']
+    df_filtered['TrancheHoraire'] = pd.cut(df_filtered["Heure"], bins=bins, labels=labels, right=False)
+
+    df_filtered["Jour"] = df_filtered["Date"].dt.day_name()
+
+    heatmap = (
+        df_filtered.groupby(["Jour", "TrancheHoraire"])
+        .size()
+        .reset_index(name="Admissions")
+    )
+
+    days_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    times_order = labels
+
+    data = []
+    for i, day in enumerate(days_order):
+        for j, time in enumerate(times_order):
+            count = heatmap[
+                (heatmap["Jour"] == day) &
+                (heatmap["TrancheHoraire"] == time)
+            ]["Admissions"].sum()
+
+            data.append([i, j, int(count)])
+
+    return {"data": data}
+
+@app.get("/predict/next-days")
+def predict_next_days(days: int = 7):
+    df_sorted = df.sort_values("Date")
+    df_sorted["TauxOccupation"] = (
+        df_sorted["Lits_occupes"] /
+        (df_sorted["Lits_disponibles"] + df_sorted["Lits_occupes"])
+    ) * 100
+
+    x = np.arange(len(df_sorted))
+    y = df_sorted["TauxOccupation"].values
+
+    coef = np.polyfit(x, y, 1)
+    trend = np.poly1d(coef)
+
+    predictions = []
+    for i in range(1, days + 1):
+        next_day_index = len(df_sorted) + i
+        prediction = round(trend(next_day_index), 2)
+        predictions.append({
+            "day_offset": i,
+            "prediction": prediction
+        })
+
+    return predictions
+
+
 # Lancer le serveur API
 if __name__ == "__main__":
     import uvicorn
